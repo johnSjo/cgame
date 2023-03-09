@@ -20,21 +20,24 @@ void Set_Video_Mode(int mode){
 }
 
 void Fill_Screen(int color){
+  _fmemset(video_buffer, (char)color, SCREEN_WIDTH*SCREEN_HEIGHT+1);
+}
 
-//	char far *video_buffer = (char far)0xa0000000l;
+void Plot_Pixel(int x, int y, char color){
+  video_buffer[SCREEN_WIDTH * y + x] = color;
+}
 
-//	for(int i = 0; i < 64000; i++)
-//		video_buffer[i] = 100;
-
-	_fmemset(video_buffer, (char)color, SCREEN_WIDTH*SCREEN_HEIGHT+1);
+void Plot_Pixel_Fast(int x, int y, char color){
+  // This assumes that the screen size is fixed at 320x200
+  video_buffer[SCREEN_WIDTH * y + x] = color;
 }
 
 void main(void){
 
   Set_Video_Mode(VGA256);
 
-  for(int i = 0; i < 100; i++)
-	Fill_Screen(i + 50);
+  for(int i = 0; i < 1000; i++)
+  Fill_Screen(i + 50);
 
   while(!kbhit()){}
 
