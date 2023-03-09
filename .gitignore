@@ -1,0 +1,12 @@
+# Visual Studio files
+*.user
+.vscode/
+.vs/
+bin/
+obj/
+
+# OS crap
+.DS_Store
+thumbs.db
+ehthumbs.db
+desktop.ini
