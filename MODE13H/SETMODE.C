@@ -14,14 +14,18 @@
 #define PALETTE_REGISTER_WR   0x3c8
 #define PALETTE_DATA          0x3c9
 
+// GLOBALS
 unsigned char far *video_buffer = (unsigned char far *)0xA0000000L;
+unsigned char far *rom_char_set = (char far *)0xf000fa6EL;
 
+// STRUCTS
 typedef struct RGB_color_typ {
   unsigned char red;
   unsigned char green;
   unsigned char blue;
 } RGB_color, *RGB_color_ptr;
 
+// FUNCTIONS
 void Set_Video_Mode(int mode){
   union REGS inregs,outregs;
 
@@ -82,6 +86,53 @@ void Get_Palette_Register(int index, RGB_color_ptr color){
   color->blue = inportb(PALETTE_DATA);
 }
 
+void Print_Char(
+  int pos_x,
+  int pos_y,
+  char character,
+  int color,
+  int background_color)
+{
+  int offset, x, y;
+  char far *work_char;
+  unsigned char bit_mask = 0x80;
+
+	work_char = rom_char_set + character * 8;
+  offset = (pos_y<<8) + (pos_y<<6) + pos_x;
+
+  for(y = 0; y < 8; y++){
+    bit_mask = 0x80;
+
+    for(x = 0; x < 8; x++){
+      if(*work_char & bit_mask){
+        video_buffer[offset + x] = color;
+      } else if(background_color >= 0) {
+        video_buffer[offset + x] = background_color;
+      }
+
+      bit_mask = bit_mask>>1;
+    }
+
+    offset += SCREEN_WIDTH;
+    work_char++;
+  }
+}
+
+void Print_String(
+  int pos_x,
+  int pos_y,
+  char *string,
+  int color,
+  int background_color
+){
+  int i = 0;
+
+  while(string[i] != 0){
+    Print_Char(pos_x + (i<<3), pos_y, string[i], color, background_color);
+    i++;
+  }
+}
+
 void main(void){
   //char boo[6] = {'h','e','l','l','o','\0'};
   //char boo[] = "Foo";
@@ -101,7 +152,8 @@ void main(void){
 
   Fill_Screen(230);
 
-  Draw_Horizontal_Line(10, 50, 300, 100);
+  Draw_Horizontal_Line(0, 50, 9<<3, 100);
+  Draw_Vertical_Line(9<<3, 0, 6<<3, 110);
   color.red = 63;
   color.green = 0;
   color.blue = 0;
@@ -147,9 +199,16 @@ void main(void){
   // printf("DeltaSec: %f\n", deltaSec);
   // printf("foo: %x\n", foo);
 
+
   printf("red: 0x%x\n", color.red);
   printf("green: 0x%x\n", color.green);
   printf("blue: 0x%x\n", color.blue);
+  gotoxy(2,10);
+  printf("width: %u", 320>>3);
+  printf(" height: %u", 200>>3);
+
+	Print_Char(20, 120, 'H', 100, -1);
+	Print_String(20, 130, "Hello!", 100, -1);
 
   // for(i = 0; i < 256; i++){
   //   Get_Palette_Register(i, (RGB_color_ptr)&color);
