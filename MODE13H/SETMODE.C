@@ -2,6 +2,7 @@
 #include <dos.h>
 #include <conio.h>
 #include <string.h>
+#include <time.h>
 
 #define VGA256         0x13
 #define TEXT_MODE      0x03
@@ -33,7 +34,7 @@ void Plot_Pixel_Fast(int x, int y, char color){
 }
 
 void Draw_Horizontal_Line(int x, int y, int length, char color){
-  int i;
+	int i;
   for(i = x; i < x + length; i++)
     Plot_Pixel_Fast(i, y, color);
 }
@@ -43,6 +44,10 @@ void main(void){
   //char boo[] = "Foo";
   unsigned int boo = (1000 << 6) + 768;
   int i,w,h;
+	clock_t startClock = clock();
+  double deltaClock;
+  double deltaSec;
+  double foo = 70000;
 
   Set_Video_Mode(VGA256);
 
@@ -67,9 +72,24 @@ void main(void){
 
 //   char boo[6] = "hello";
 
-  //printf("%u\n", boo);
-  //printf("%u", sizeof(boo));
+	// t = clock() - t;
+	// time_taken = ((double)t)/CLOCKS_PER_SEC; // calculate the elapsed time
 
-  while(!kbhit()){}
-  Set_Video_Mode(TEXT_MODE);
+
+	//printf("%u\n", boo);
+	//printf("%u", sizeof(boo));
+  // printf("%f\n", time_taken);
+  // printf("%u\n", sizeof(time_taken));
+  printf("%u\n", sizeof(CLOCKS_PER_SEC));
+  printf("%f\n", CLOCKS_PER_SEC);
+
+
+  deltaClock = clock() - startClock;
+  deltaSec = (double)deltaClock / CLOCKS_PER_SEC;
+  printf("DeltaClock: %f\n", (double)deltaClock);
+  printf("DeltaSec: %f\n", deltaSec);
+  printf("foo: %f\n", foo);
+
+	while(!kbhit()){}
+	Set_Video_Mode(TEXT_MODE);
 }
