@@ -34,9 +34,21 @@ void Plot_Pixel_Fast(int x, int y, char color){
 }
 
 void Draw_Horizontal_Line(int x, int y, int length, char color){
-	int i;
+  int i;
   for(i = x; i < x + length; i++)
     Plot_Pixel_Fast(i, y, color);
+}
+
+void Draw_Vertical_Line(int x, int y, int length, char color){
+  int i;
+  for(i = y; i < y + length; i++)
+    Plot_Pixel_Fast(x, i, color);
+}
+
+void Draw_Horizontal_Line_Memset(int start_x, int end_x, int y, unsigned int color){
+  if(end_x > start_x){
+    _fmemset((char far *)(video_buffer + ((y<<8) + (y<<6)) + start_x), color, end_x - start_x + 1);
+  }
 }
 
 void main(void){
@@ -44,7 +56,7 @@ void main(void){
   //char boo[] = "Foo";
   unsigned int boo = (1000 << 6) + 768;
   int i,w,h;
-	clock_t startClock = clock();
+  clock_t startClock = clock();
   double deltaClock;
   double deltaSec;
   int foo = 0x0cff>>16;
@@ -58,12 +70,14 @@ void main(void){
   Fill_Screen(230);
 
   Draw_Horizontal_Line(10, 50, 300, 100);
+  Draw_Horizontal_Line_Memset(10, 210, 100, 100);
+  Draw_Vertical_Line(10, 50, 50, 110);
 
-  for(h = 0; h < SCREEN_HEIGHT; h++){
-    for(w = 0; w < SCREEN_WIDTH; w++){
-        Plot_Pixel(w, h, 100);
-    }
-  }
+  // for(h = 0; h < SCREEN_HEIGHT; h++){
+  //   for(w = 0; w < SCREEN_WIDTH; w++){
+  //       Plot_Pixel(w, h, 100);
+  //   }
+  // }
 
   Plot_Pixel(150, 150, 220);
 
@@ -73,12 +87,12 @@ void main(void){
 
 //   char boo[6] = "hello";
 
-	// t = clock() - t;
-	// time_taken = ((double)t)/CLOCKS_PER_SEC; // calculate the elapsed time
+  // t = clock() - t;
+  // time_taken = ((double)t)/CLOCKS_PER_SEC; // calculate the elapsed time
 
 
-	//printf("%u\n", boo);
-	//printf("%u", sizeof(boo));
+  //printf("%u\n", boo);
+  //printf("%u", sizeof(boo));
   // printf("%f\n", time_taken);
   // printf("%u\n", sizeof(time_taken));
   printf("%u\n", sizeof(CLOCKS_PER_SEC));
@@ -91,6 +105,6 @@ void main(void){
   printf("DeltaSec: %f\n", deltaSec);
   printf("foo: %x\n", foo);
 
-	while(!kbhit()){}
-	Set_Video_Mode(TEXT_MODE);
+  while(!kbhit()){}
+  Set_Video_Mode(TEXT_MODE);
 }
