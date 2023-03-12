@@ -47,7 +47,8 @@ void main(void){
 	clock_t startClock = clock();
   double deltaClock;
   double deltaSec;
-  double foo = 70000;
+  int foo = 0x0cff>>16;
+  // foo = foo & 0x00ff;
 
   Set_Video_Mode(VGA256);
 
@@ -88,7 +89,7 @@ void main(void){
   deltaSec = (double)deltaClock / CLOCKS_PER_SEC;
   printf("DeltaClock: %f\n", (double)deltaClock);
   printf("DeltaSec: %f\n", deltaSec);
-  printf("foo: %f\n", foo);
+  printf("foo: %x\n", foo);
 
 	while(!kbhit()){}
 	Set_Video_Mode(TEXT_MODE);
