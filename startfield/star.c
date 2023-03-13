@@ -1,6 +1,8 @@
 #include <dos.h>
 #include <stdio.h>
 #include <conio.h>
+#include <alloc.h>
+#include <malloc.h>
 
 #define VGA256 0x13
 #define TEXT_MODE 0x03
@@ -167,8 +169,10 @@ void Init_Stars(void)
 
 void main(void)
 {
-  int done = 0, index;
+  int done = 1, index;
   star_ptr star;
+  int blocks = 10;
+  uchar far *boo[10];
 
   Set_Video_Mode(VGA256);
 
@@ -229,6 +233,28 @@ void main(void)
     }
 
     Delay(1);
+  }
+
+  // printf("\nBuffer P   : %p", &boo);
+  // printf("\nBuffer S   : %u", sizeof(boo));
+  // printf("\nBuffer     : %u", boo);
+  // printf("\nIndex      : %p", &index);
+
+  for (index = 0; index < blocks; index++)
+  {
+    boo[index] = (uchar far *)_fmalloc(64000);
+
+    if (boo[index] == NULL)
+      printf("\nOUT OF MEM");
+    else
+    {
+      // printf("\n---------");
+      // printf("\nBuffer P   : %p", &boo);
+      // printf("\nBuffer S   : %u", sizeof(boo));
+      // printf("\nBuffer     : %u", boo);
+      // printf("\nIndex      : %p", &index);
+      printf("\nBoo      : %p", &boo[index]);
+    }
   }
 
   while (!kbhit())
