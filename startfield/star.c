@@ -7,7 +7,7 @@
 #define SCREEN_WIDTH (unsigned int)320
 #define SCREEN_HEIGHT (unsigned int)200
 
-#define NUM_STARS 75
+#define NUM_STARS 175
 #define PLANE_1 1
 #define PLANE_2 2
 #define PLANE_3 3
@@ -38,7 +38,7 @@ void Init_Stars(void);
 // TYPEDEF
 typedef unsigned char uchar;
 typedef unsigned int uint;
-typedef struct start_type
+typedef struct star_type
 {
   int x, y;
   int plane;
@@ -135,14 +135,105 @@ void Delay(int clicks)
   }
 }
 
+void Init_Stars(void)
+{
+  int i;
+
+  for (i = 0; i < NUM_STARS; i++)
+  {
+    stars[i].x = rand() % SCREEN_WIDTH;
+    stars[i].y = rand() % SCREEN_HEIGHT;
+
+    switch (rand() % 3)
+    {
+    case 0:
+      stars[i].plane = PLANE_1;
+      stars[i].color = 8;
+      break;
+    case 1:
+      stars[i].plane = PLANE_2;
+      stars[i].color = 7;
+      break;
+    case 2:
+      stars[i].plane = PLANE_3;
+      stars[i].color = 15;
+      break;
+
+    default:
+      break;
+    }
+  }
+}
+
 void main(void)
 {
+  int done = 0, index;
+  star_ptr star;
 
-  printf("\nStart");
-  Delay(20);
-  printf("\nEnd");
+  Set_Video_Mode(VGA256);
+
+  Init_Stars();
+
+  while (!done)
+  {
+    if (kbhit())
+    {
+      switch (getch())
+      {
+      case '-':
+        velocity_1 -= 1;
+        velocity_2 -= 2;
+        velocity_3 -= 3;
+        break;
+      case '=':
+        velocity_1 += 1;
+        velocity_2 += 2;
+        velocity_3 += 3;
+        break;
+      case 'q':
+        done = 1;
+        break;
+
+      default:
+        break;
+      }
+    }
+
+    for (index = 0; index < NUM_STARS; index++)
+    {
+      star = &stars[index];
+      Plot_Pixel_Fast(star->x, star->y, 0);
+
+      switch (star->plane)
+      {
+      case PLANE_1:
+        star->x += velocity_1;
+        break;
+      case PLANE_2:
+        star->x += velocity_2;
+        break;
+      case PLANE_3:
+        star->x += velocity_3;
+        break;
+
+      default:
+        break;
+      }
+
+      if (star->x >= SCREEN_WIDTH)
+        star->x -= SCREEN_WIDTH;
+      else if (star->x < 0)
+        star->x += SCREEN_WIDTH;
+
+      Plot_Pixel_Fast(star->x, star->y, star->color);
+    }
+
+    Delay(1);
+  }
 
   while (!kbhit())
   {
   }
+
+  Set_Video_Mode(TEXT_MODE);
 }
