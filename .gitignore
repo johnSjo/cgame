@@ -10,3 +10,6 @@ obj/
 thumbs.db
 ehthumbs.db
 desktop.ini
+
+# Dosbox-x
+*.swp
