@@ -1,0 +1,8 @@
+Publics by module
+
+TEXT    	size = 212
+	_Print_Char                       _Print_String
+	_rom_char_set                   
+
+VMODE   	size = 38
+	_Set_Video_Mode                   _video_buffer
