@@ -2,8 +2,6 @@
 *.user
 .vscode/
 .vs/
-bin/
-obj/
 
 # OS crap
 .DS_Store
@@ -13,3 +11,11 @@ desktop.ini
 
 # Dosbox-x
 *.swp
+*.SWP
+
+# C / Borland
+**/bin/
+**/BIN/
+obj/
+*.bak
+*.BAK
