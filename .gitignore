@@ -2,11 +2,21 @@
 *.user
 .vscode/
 .vs/
-bin/
-obj/
 
 # OS crap
 .DS_Store
 thumbs.db
 ehthumbs.db
 desktop.ini
+
+# Dosbox-x
+*.swp
+*.SWP
+
+# C / Borland
+**/bin/
+**/BIN/
+obj/
+*.bak
+*.BAK
+*.DSK
