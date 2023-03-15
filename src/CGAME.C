@@ -1,9 +1,10 @@
 #include "vmode.h"
 #include "typedef.h"
+#include "text.h"
 
 void main()
 {
-  uint boo = 34;
+  uint boo = 36;
 
   Set_Video_Mode(VGA256);
 

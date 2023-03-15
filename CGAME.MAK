@@ -1,14 +1,14 @@
 .AUTODEPEND
 
-.PATH.obj = .\BIN\
+.PATH.obj = .\BIN
 
 #		*Translator Definitions*
 CC = bcc +CGAME.CFG
 TASM = TASM
 TLIB = tlib
 TLINK = tlink
-LIBPATH = C:\TOOLS\BORLANDC\LIB; .\LIB\
-INCLUDEPATH = C:\TOOLS\BORLANDC\INCLUDE; .\LIB\
+LIBPATH = C:\TOOLS\BORLANDC\LIB;.\LIB
+INCLUDEPATH = C:\TOOLS\BORLANDC\INCLUDE;.\LIB
 
 
 #		*Implicit Rules*
@@ -45,18 +45,18 @@ cgame.obj: cgame.cfg src\cgame.c
 	$(CC) -c src\cgame.c
 
 #		*Compiler Configuration File*
-cgame.cfg: cgame.mak
-  copy &&|
--mc
--2
--v
--vi-
--weas
--wpre
--n.\BIN\
--I$(INCLUDEPATH)
--L$(LIBPATH)
--P-.C
-| cgame.cfg
+# cgame.cfg: cgame.mak
+#   copy &&|
+# -mc
+# -2
+# -v
+# -vi-
+# -weas
+# -wpre
+# -n.\BIN
+# -I$(INCLUDEPATH)
+# -L$(LIBPATH)
+# -P-.C
+# | cgame.cfg
 
 
