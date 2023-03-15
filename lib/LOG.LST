@@ -1,6 +1,6 @@
 Publics by module
 
-TEXT    	size = 212
+TEXT    	size = 217
 	_Print_Char                       _Print_String
 	_rom_char_set                   
 

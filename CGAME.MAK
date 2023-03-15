@@ -5,7 +5,10 @@
 #		*Translator Definitions*
 CC = bcc +CGAME.CFG
 TASM = TASM
+TLIB = tlib
 TLINK = tlink
+LIBPATH = C:\TOOLS\BORLANDC\LIB; .\LIB\
+INCLUDEPATH = C:\TOOLS\BORLANDC\INCLUDE; .\LIB\
 
 
 #		*Implicit Rules*
@@ -19,26 +22,26 @@ TLINK = tlink
 
 
 EXE_dependencies =  \
-  lib\gfxlib.lib \
-  cgame.obj
+ lib\gfxlib.lib \
+ cgame.obj
 
 #		*Explicit Rules*
-.\bin\\cgame.exe: cgame.cfg $(EXE_dependencies)
-  $(TLINK) /v/x/c/P-/LC:\TOOLS\BORLANDC\LIB; .\LIB\ @&&|
+.\bin\cgame.exe: cgame.cfg $(EXE_dependencies)
+  $(TLINK) /v/x/c/P-/L$(LIBPATH) @&&|
 c0c.obj+
 .\bin\\cgame.obj
-.\bin\\cgame
+.\bin\cgame
 		# no map file
 lib\gfxlib.lib+
+graphics.lib+
 emu.lib+
 mathc.lib+
-cc.lib+
-graphics.lib
+cc.lib
 |
 
 
 #		*Individual File Dependencies*
-cgame.obj: src\cgame.c 
+cgame.obj: cgame.cfg src\cgame.c 
 	$(CC) -c src\cgame.c
 
 #		*Compiler Configuration File*
@@ -47,9 +50,12 @@ cgame.cfg: cgame.mak
 -mc
 -2
 -v
+-vi-
+-weas
+-wpre
 -n.\BIN\
--IC:\TOOLS\BORLANDC\INCLUDE; .\LIB\
--LC:\TOOLS\BORLANDC\LIB; .\LIB\
+-I$(INCLUDEPATH)
+-L$(LIBPATH)
 -P-.C
 | cgame.cfg
 
