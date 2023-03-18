@@ -20,7 +20,7 @@ TODO: convert to a make file
 
 A `./bin` folder is needed
 
-Run `./make -f cgame.mak` to build the project
+Run `./make` to build the project
 
 ## Borland settings
 
