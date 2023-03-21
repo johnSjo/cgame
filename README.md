@@ -18,9 +18,10 @@ TODO: convert to a make file
 
 ### cgame
 
-A `./bin` folder is needed
-
 Run `./make` to build the project
+Run `./make -Drun` to build and run the project
+
+A `./bin` folder will be created and the exe will be placed there
 
 ## Borland settings
 

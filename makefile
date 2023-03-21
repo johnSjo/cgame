@@ -10,6 +10,19 @@ TLINK = tlink
 LIBPATH = C:\TOOLS\BORLANDC\LIB;.\LIB
 INCLUDEPATH = C:\TOOLS\BORLANDC\INCLUDE;.\LIB
 
+!if $d(run)
+all: start .\bin\cgame.exe run
+!else
+all: start .\bin\cgame.exe
+!endif
+
+start:
+	@echo -- Create bin folder --
+	mkdir bin
+	@echo -- Deleting old files --
+	del .\bin\cgame.exe
+	del .\bin\cgame.obj
+	@echo -- done --
 
 #		*Implicit Rules*
 .c.obj:
@@ -59,4 +72,7 @@ cgame.obj: cgame.cfg src\cgame.c
 # -P-.C
 # | cgame.cfg
 
+run:
+	.\bin\cgame.exe
 
+.PRECIOUS:run
