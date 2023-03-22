@@ -12,9 +12,9 @@ Using:
 
 ### gfxlib
 
-In `./lib` there's a `makelib.bat` file to compile and build the lib file
+The gfxlib in `./lib` is build together with the main make file
 
-TODO: convert to a make file
+TODO: see if we can change so that the lib only rebuilds changed components (currently the whole lib is rebuilt every time)
 
 ### cgame
 

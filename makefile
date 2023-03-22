@@ -7,7 +7,7 @@ CC = bcc +CGAME.CFG
 TASM = TASM
 TLIB = tlib
 TLINK = tlink
-LIBPATH = C:\TOOLS\BORLANDC\LIB;.\LIB
+LIBPATH = C:\TOOLS\BORLANDC\LIB;.\LIB\bin
 INCLUDEPATH = C:\TOOLS\BORLANDC\INCLUDE;.\LIB
 
 !if $d(run)
@@ -17,12 +17,8 @@ all: start .\bin\cgame.exe
 !endif
 
 start:
-	@echo -- Create bin folder --
 	mkdir bin
-	@echo -- Deleting old files --
-	del .\bin\cgame.exe
-	del .\bin\cgame.obj
-	@echo -- done --
+	mkdir .\lib\bin
 
 #		*Implicit Rules*
 .c.obj:
@@ -35,7 +31,7 @@ start:
 
 
 EXE_dependencies =  \
- lib\gfxlib.lib \
+ lib\bin\gfxlib.lib \
  cgame.obj
 
 #		*Explicit Rules*
@@ -45,32 +41,29 @@ c0c.obj+
 .\bin\\cgame.obj
 .\bin\cgame
 		# no map file
-lib\gfxlib.lib+
+lib\bin\gfxlib.lib+
 graphics.lib+
 emu.lib+
 mathc.lib+
 cc.lib
 |
 
-
 #		*Individual File Dependencies*
 cgame.obj: cgame.cfg src\cgame.c 
 	$(CC) -c src\cgame.c
 
-#		*Compiler Configuration File*
-# cgame.cfg: cgame.mak
-#   copy &&|
-# -mc
-# -2
-# -v
-# -vi-
-# -weas
-# -wpre
-# -n.\BIN
-# -I$(INCLUDEPATH)
-# -L$(LIBPATH)
-# -P-.C
-# | cgame.cfg
+
+lib\bin\gfxlib.lib: vmode.obj text.obj
+	tlib lib\bin\gfxlib +-lib\bin\vmode.obj
+	tlib lib\bin\gfxlib +-lib\bin\text.obj
+	tlib lib\bin\gfxlib *, lib\log
+
+vmode.obj: lib\gfxlib.cfg lib\src\vmode.c
+	bcc +lib\gfxlib.cfg lib\src\vmode.c
+
+text.obj: lib\gfxlib.cfg lib\src\text.c
+	bcc +lib\gfxlib.cfg lib\src\text.c
+
 
 run:
 	.\bin\cgame.exe
