@@ -8,31 +8,40 @@ Using:
 - Borland C++ 3.1 (only for compiling and build the project)
 - vs code
 
+## Dosbox-x
+
+Set a path variable to the borland install bin directory (in my case: `c:\tools\borlandc\bin`)
+
 ## Building project
 
-### gfxlib
+### Prerequisite
+
+Update the borland include/lib paths, just replace `c:\tools\borlandc` in the `makefile` and various `*.cfg` files to where you have your borland install.
+
+### make
+
+Run `./make` to build the project
+
+**Parameters:**
+
+- `-Dlib` to also build the gfx library (if it's the first time you build the project you should use this flag)
+- `-Drun` to run the game after build
+- `lib` to just build the gfx library
+- `run` to just run the game (i.e. same as `./bin/cgame.exe`)
+
+Executable will be placed in `./bin`
+
+### gfxlib - Graphics Library
+
+In the `./lib` folder lives the graphics library, i.e. various non-game related graphical helper functions.
 
 The gfxlib in `./lib` is build together with the main make file
 
-TODO: see if we can change so that the lib only rebuilds changed components (currently the whole lib is rebuilt every time)
+**TODO:** see if we can change so that the lib only rebuilds changed components (currently we have to manually set a flag to trigger a rebuild of the library)
 
 ### cgame
 
-Run `./make` to build the project
-Run `./make -Drun` to build and run the project
-
-A `./bin` folder will be created and the exe will be placed there
-
-## Borland settings
-
-Path used: `c:\tools\borlandc\` (don't forget to set path variable in doxbox)
-
-### If using the ide:
-
-```
-Options->Compiler->Model->Compact
-        ⌙Debugger->Program Heap Size->640K (as to not run out of memory while running the app from the ide)
-```
+_wip_
 
 ## Replacing functions
 
@@ -42,4 +51,13 @@ The following functions from the book need to be replaced to compile with Borlan
 _int86() -> int86()
 _outp() -> outportb()
 _inp() -> inportb()
+```
+
+## Borland settings, if using the ide:
+
+**note**, I only used the ide in the beginning to set up the project and then continued with the cli tools and vs code as the editor. Which means that these setting may not be all that are needed.
+
+```
+Options->Compiler->Model->Compact
+        ⌙Debugger->Program Heap Size->640K (as to not run out of memory while running the app from the ide)
 ```

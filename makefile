@@ -11,10 +11,14 @@ LIBPATH = C:\TOOLS\BORLANDC\LIB;.\LIB\bin
 INCLUDEPATH = C:\TOOLS\BORLANDC\INCLUDE;.\LIB
 
 !if $d(run)
-all: start .\bin\cgame.exe run
-!else
-all: start .\bin\cgame.exe
+RUN = run
 !endif
+
+!if $d(lib)
+LIB = lib
+!endif
+
+all: start $(LIB) .\bin\cgame.exe $(RUN)
 
 start:
 	mkdir bin
@@ -31,7 +35,6 @@ start:
 
 
 EXE_dependencies =  \
- lib\bin\gfxlib.lib \
  cgame.obj
 
 #		*Explicit Rules*
@@ -41,7 +44,7 @@ c0c.obj+
 .\bin\\cgame.obj
 .\bin\cgame
 		# no map file
-lib\bin\gfxlib.lib+
+gfxlib.lib+
 graphics.lib+
 emu.lib+
 mathc.lib+
@@ -53,7 +56,7 @@ cgame.obj: cgame.cfg src\cgame.c
 	$(CC) -c src\cgame.c
 
 
-lib\bin\gfxlib.lib: vmode.obj text.obj
+lib: vmode.obj text.obj
 	tlib lib\bin\gfxlib +-lib\bin\vmode.obj
 	tlib lib\bin\gfxlib +-lib\bin\text.obj
 	tlib lib\bin\gfxlib *, lib\log
