@@ -10,7 +10,14 @@ Using:
 
 ## Dosbox-x
 
-Set a path variable to the borland install bin directory (in my case: `c:\tools\borlandc\bin`)
+Set a path variable to the borland install bin directory (in my case: `c:\tools\borlandc\bin`).
+
+Configure it however you like, but here are some recommendations:
+
+- `aspect = true`, since 320x200 is wider than 4/3 this will stretch the image to more resemble the old crt style.
+- `cycles = fixed 12000`, this was a god compromise of speed and stability on my machine.
+- `cols = 80`
+- `lins = 43`, to see a bit more of the compilation output
 
 ## Building project
 
