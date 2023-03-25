@@ -20,3 +20,5 @@ obj/
 *.bak
 *.BAK
 *.DSK
+*.lst
+*.LST
