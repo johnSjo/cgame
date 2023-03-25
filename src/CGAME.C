@@ -73,11 +73,13 @@ int PCX_Load(char *filename, pcx_picture_ptr image)
     // ((char *)header)[index] = (char)getc(file_ptr);
   }
 
+#ifdef DEV
   if (((long)header->width * header->height) > 65000)
   {
     printf("\nPCX_Load: large (> ~320x200) image sizes is currently not suported.");
     return 0;
   }
+#endif
 
   width = (header->width + 1);
   height = (header->height + 1);
@@ -170,6 +172,10 @@ void main()
     PCX_Show_Buffer(&image);
     PCX_Delete(&image);
   }
+
+#ifdef PROD
+  printf("\nNow we're in production");
+#endif
 
   while (!kbhit())
   {

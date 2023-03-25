@@ -18,6 +18,12 @@ RUN = run
 LIB = lib
 !endif
 
+!if $d(PROD)
+FLAG = -DPROD
+!else
+FLAG = -DDEV
+!endif
+
 all: start $(LIB) .\bin\cgame.exe $(RUN)
 
 start:
@@ -53,7 +59,7 @@ cc.lib
 
 #		*Individual File Dependencies*
 cgame.obj: cgame.cfg src\cgame.c 
-	$(CC) -c src\cgame.c
+	$(CC) -c $(FLAG) src\cgame.c
 
 
 lib: vmode.obj text.obj color.obj
