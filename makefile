@@ -62,20 +62,24 @@ cgame.obj: cgame.cfg src\cgame.c
 	$(CC) -c $(FLAG) src\cgame.c
 
 
-lib: vmode.obj text.obj color.obj
+lib: vmode.obj text.obj color.obj pcx.obj
 	tlib lib\bin\gfxlib +-lib\bin\vmode.obj
 	tlib lib\bin\gfxlib +-lib\bin\text.obj
 	tlib lib\bin\gfxlib +-lib\bin\color.obj
+	tlib lib\bin\gfxlib +-lib\bin\pcx.obj
 	tlib lib\bin\gfxlib *, lib\log
 
 vmode.obj: lib\gfxlib.cfg lib\src\vmode.c
-	bcc +lib\gfxlib.cfg lib\src\vmode.c
+	bcc +lib\gfxlib.cfg $(FLAG) lib\src\vmode.c
 
 text.obj: lib\gfxlib.cfg lib\src\text.c
-	bcc +lib\gfxlib.cfg lib\src\text.c
+	bcc +lib\gfxlib.cfg $(FLAG) lib\src\text.c
 
 color.obj: lib\gfxlib.cfg lib\src\color.c
-	bcc +lib\gfxlib.cfg lib\src\color.c
+	bcc +lib\gfxlib.cfg $(FLAG) lib\src\color.c
+
+pcx.obj: lib\gfxlib.cfg lib\src\pcx.c
+	bcc +lib\gfxlib.cfg $(FLAG) lib\src\pcx.c
 
 
 run:
