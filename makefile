@@ -15,7 +15,7 @@ RUN = run
 !endif
 
 !if $d(lib)
-LIB = lib
+LIB = clean_lib lib
 !endif
 
 !if $d(PROD)
@@ -24,7 +24,7 @@ FLAG = -DPROD
 FLAG = -DDEV
 !endif
 
-all: start $(LIB) .\bin\cgame.exe $(RUN)
+all: start $(LIB) clean_exe .\bin\cgame.exe $(RUN)
 
 start:
 	mkdir bin
@@ -42,6 +42,9 @@ start:
 
 EXE_dependencies =  \
  cgame.obj
+
+clean_exe:
+	del /q .\bin\*.*
 
 #		*Explicit Rules*
 .\bin\cgame.exe: cgame.cfg $(EXE_dependencies)
@@ -61,12 +64,15 @@ cc.lib
 cgame.obj: cgame.cfg src\cgame.c 
 	$(CC) -c $(FLAG) src\cgame.c
 
+clean_lib:
+	del /q .\lib\bin\*.*
 
-lib: vmode.obj text.obj color.obj pcx.obj
+lib: vmode.obj text.obj color.obj pcx.obj sprite.obj
 	tlib lib\bin\gfxlib +-lib\bin\vmode.obj
 	tlib lib\bin\gfxlib +-lib\bin\text.obj
 	tlib lib\bin\gfxlib +-lib\bin\color.obj
 	tlib lib\bin\gfxlib +-lib\bin\pcx.obj
+	tlib lib\bin\gfxlib +-lib\bin\sprite.obj
 	tlib lib\bin\gfxlib *, lib\log
 
 vmode.obj: lib\gfxlib.cfg lib\src\vmode.c
@@ -80,6 +86,9 @@ color.obj: lib\gfxlib.cfg lib\src\color.c
 
 pcx.obj: lib\gfxlib.cfg lib\src\pcx.c
 	bcc +lib\gfxlib.cfg $(FLAG) lib\src\pcx.c
+
+sprite.obj: lib\gfxlib.cfg lib\src\sprite.c
+	bcc +lib\gfxlib.cfg $(FLAG) lib\src\sprite.c
 
 
 run:
