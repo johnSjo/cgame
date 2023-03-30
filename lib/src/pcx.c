@@ -114,3 +114,23 @@ void PCX_Show_Buffer(pcx_image_ptr image)
     pop ds;
   }
 }
+
+uchar far *PCX_Create_Section(pcx_image_ptr image, vec2 offset, vec2 size)
+{
+  uint buffer_size = size.x * size.y;
+  uchar far *buffer;
+  pcx_header_ptr header = &image->header;
+
+  // Check if section is inside image
+  if (((offset.x + size.x) > (header->width + 1)) || ((offset.y + size.y) > (header->height + 1)))
+  {
+    printf("\nPCX_Create_Section: section is outside of the image.");
+    return NULL;
+  }
+
+  buffer = (uchar far *)_fmalloc(buffer_size);
+  // _fmemset(buffer, 3, buffer_size);
+  // printf("\nTemp: %p", buffer);
+
+  return buffer;
+}

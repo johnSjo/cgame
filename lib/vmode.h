@@ -6,6 +6,8 @@
 #include <CONIO.H>
 #include "typedef.h"
 
+#define SET_MODE 0x00
+#define VIDEO_INTERRUPT 0x10
 #define VGA256 0x13
 #define TEXT_MODE 0x03
 #define SCREEN_WIDTH (unsigned int)320

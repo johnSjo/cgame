@@ -3,9 +3,11 @@
 
 #include <malloc.h>
 #include <stdio.h>
+#include <string.h>
 #include "typedef.h"
 #include "vmode.h"
 #include "color.h"
+#include "vec.h"
 
 // STRUCTURES
 
@@ -39,9 +41,9 @@ typedef struct pcx_image_type
 int PCX_Load(char *filename, pcx_image_ptr image);
 void PCX_Allocate_Buffer(pcx_image_ptr image, uint width, uint height);
 void PCX_Enable_Palette(pcx_image_ptr image);
-void PCX_Delete(pcx_image_ptr image);
-
 // For displaying the whole image
 void PCX_Show_Buffer(pcx_image_ptr image);
+void PCX_Delete(pcx_image_ptr image);
+uchar far *PCX_Create_Section(pcx_image_ptr image, vec2 offset, vec2 size);
 
 #endif

@@ -8,8 +8,8 @@ void Set_Video_Mode(int mode)
 {
   union REGS inregs, outregs;
 
-  inregs.h.ah = 0;
+  inregs.h.ah = SET_MODE;
   inregs.h.al = (uchar)mode;
 
-  int86(0x10, &inregs, &outregs);
+  int86(VIDEO_INTERRUPT, &inregs, &outregs);
 }
