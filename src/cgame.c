@@ -5,11 +5,12 @@
 void main()
 {
     pcx_image image;
-    vec2 offset = {120, 100};
+    vec2 offset = {150, 60};
     vec2 size = {40, 40};
-    uchar far *section, video_address, section_address;
+    vec2 position = {200, 120};
+    uchar far *section, *video_address, *section_address;
     int i;
-    int buffer_size = (size.x * size.y) / 2;
+    int buffer_size;
 
     Set_Video_Mode(VGA256);
 
@@ -53,17 +54,17 @@ void main()
         printf("| %u |", section[i]);
     }
 
-    for (i = 0; i < 40; i++)
+    buffer_size = size.x >> 1;
+    for (i = 0; i < size.y; i++)
     {
-        // video_address = (uchar far *)&(video_buffer[(i * SCREEN_WIDTH)]);
-        video_address = (uchar far *)(video_buffer + (i * SCREEN_WIDTH));
-        section_address = (uchar far *)&(section[(i * 40)]);
+        video_address = video_buffer + (((position.y + i) << 8) + (position.y + i << 6)) + position.x;
+        section_address = section + (i * size.x);
 
         _asm {
             push ds;
             les di, video_address;
             lds si, section_address;
-            mov cx, 20;
+            mov cx, buffer_size;
             cld;
             rep movsw;
             pop ds;
