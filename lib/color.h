@@ -12,9 +12,9 @@
 // STRUCTS
 typedef struct RGB_color_typ
 {
-  uchar red;
-  uchar green;
-  uchar blue;
+    uchar red;
+    uchar green;
+    uchar blue;
 } RGB_color, *RGB_color_ptr;
 
 // PROTOTYPES

@@ -5,12 +5,12 @@
 
 typedef struct vec2_type
 {
-  int x, y;
+    int x, y;
 } vec2, *vec2_ptr;
 
 typedef struct vec2_type_float
 {
-  float x, y;
+    float x, y;
 } vec2f, *vec2f_ptr;
 
 #endif
