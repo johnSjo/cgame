@@ -27,13 +27,21 @@ Update the borland include/lib paths, just replace `c:\tools\borlandc` in the `m
 
 ### make
 
-Run `./make` to build the project
+Run `./make` to build the whole project (game & gfx library)
 
 **Parameters:**
 
-- `-Dlib` to also build the gfx library (if it's the first time you build the project you should use this flag)
-- `-Drun` to run the game after build
-- `lib` to just build the gfx library
+target:
+
+- `-DG` the game executable
+- `-DL` the gfx library
+
+(if you use one or more targets only they will be built, unlike if you use none -> all will be built)
+
+extra options:
+
+- `-DR` to run game after build
+- `-DP` to compile in production mode (TODO: change the compiler settings for prod)
 - `run` to just run the game (i.e. same as `./bin/cgame.exe`)
 
 Executable will be placed in `./bin`

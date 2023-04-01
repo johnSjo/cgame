@@ -9,22 +9,33 @@ TLIB = tlib
 TLINK = tlink
 LIBPATH = C:\TOOLS\BORLANDC\LIB;.\LIB\bin
 INCLUDEPATH = C:\TOOLS\BORLANDC\INCLUDE;.\LIB
+EXE = clean_exe .\bin\cgame.exe
+LIB = clean_lib lib
 
-!if $d(run)
+!if $d(R)
 RUN = run
 !endif
 
-!if $d(lib)
+!if $d(G) || $d(L)
+LIB =
+EXE =
+!endif
+
+!if $d(G)
+EXE = clean_exe .\bin\cgame.exe
+!endif
+
+!if $d(L)
 LIB = clean_lib lib
 !endif
 
-!if $d(PROD)
+!if $d(P)
 FLAG = -DPROD
 !else
 FLAG = -DDEV
 !endif
 
-all: start $(LIB) clean_exe .\bin\cgame.exe $(RUN)
+all: start $(LIB) $(EXE) $(RUN)
 
 start:
 	mkdir bin
