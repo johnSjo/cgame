@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <malloc.h>
 #include <string.h>
+#include "file.h"
 #include "typedef.h"
 #include "color.h"
 #include "pcx.h"
@@ -14,26 +15,34 @@
 
 typedef enum Asset_Variant
 {
-  BITMAP,
+  SPRITE_SHEET,
   IMAGE,
   PALETTE
 } Asset_Variant;
 
 // STRUCTS
-typedef struct bitmap_config_type
+
+typedef struct sprite_sheet_frame_type
+{
+  uchar far *buffer; // The pointer to the image data
+  char transparent;  // 0 = opaque, 1 = has some transparent pixels
+  vec2 dimension;    // The size of the sprite_sheet_frame
+} sprite_sheet_frame, *sprite_sheet_frame_ptr;
+
+typedef struct sprite_sheet_config_type
 {
   char id[32];
   char path[128];
   vec2 dimension;
-} bitmap_config, *bitmap_config_ptr;
+} sprite_sheet_config, *sprite_sheet_config_ptr;
 
-typedef struct bitmap_asset_type
+typedef struct sprite_sheet_asset_type
 {
   char far *id;
   Asset_Variant variant;
   uchar number_of_frames;
-  frame_ptr far **frames;
-} bitmap_asset, *bitmap_asset_ptr;
+  sprite_sheet_frame_ptr far **frames;
+} sprite_sheet_asset, *sprite_sheet_asset_ptr;
 
 typedef struct image_asset_type
 {
@@ -61,10 +70,10 @@ int Init_Assets_Store(void);
 void Free_Assets_Store(void);
 
 // INTERNALS
-static int Read_Config_File(char *file_path, char **lines);
-static int Get_Bitmap_Config(bitmap_config_ptr config, char far *line);
-static int Create_Bitmap_Asset(pcx_image_ptr image, bitmap_asset_ptr asset, bitmap_config_ptr config);
 static int Add_Asset_To_Store(asset_ptr asset);
-static void Free_Bitmap_Asset(bitmap_asset_ptr asset);
+static int Get_Sprite_Sheet_Config(sprite_sheet_config_ptr config, char far *line);
+static int Create_Sprite_Sheet_Asset(pcx_image_ptr image, sprite_sheet_asset_ptr asset, sprite_sheet_config_ptr config);
+static int Init_Sprite_Sheet_Asset(sprite_sheet_asset_ptr asset, sprite_sheet_config_ptr config, uchar number_of_frames);
+static void Free_Sprite_Sheet_Asset(sprite_sheet_asset_ptr asset);
 
 #endif

@@ -79,14 +79,14 @@ clean_lib:
 	del /q .\lib\bin\*.*
 
 lib: vmode.obj text.obj color.obj pcx.obj sprite.obj \
-assets.obj frame.obj
+assets.obj file.obj
 	tlib lib\bin\gfxlib +-lib\bin\vmode.obj
 	tlib lib\bin\gfxlib +-lib\bin\text.obj
 	tlib lib\bin\gfxlib +-lib\bin\color.obj
 	tlib lib\bin\gfxlib +-lib\bin\pcx.obj
 	tlib lib\bin\gfxlib +-lib\bin\sprite.obj
 	tlib lib\bin\gfxlib +-lib\bin\assets.obj
-	tlib lib\bin\gfxlib +-lib\bin\frame.obj
+	tlib lib\bin\gfxlib +-lib\bin\file.obj
 	tlib lib\bin\gfxlib *, lib\log
 
 vmode.obj: lib\gfxlib.cfg lib\src\vmode.c
@@ -107,8 +107,8 @@ sprite.obj: lib\gfxlib.cfg lib\src\sprite.c
 assets.obj: lib\gfxlib.cfg lib\src\assets.c
 	bcc +lib\gfxlib.cfg $(FLAG) lib\src\assets.c
 
-frame.obj: lib\gfxlib.cfg lib\src\frame.c
-	bcc +lib\gfxlib.cfg $(FLAG) lib\src\frame.c
+file.obj: lib\gfxlib.cfg lib\src\file.c
+	bcc +lib\gfxlib.cfg $(FLAG) lib\src\file.c
 
 
 run:

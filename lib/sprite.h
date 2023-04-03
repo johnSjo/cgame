@@ -63,7 +63,7 @@ typedef struct sprite_type
     Step_Rotation step_rotation;              // A fixed 90° step rotation, because that's just rendering the pixels in a different order
     vec2 flip;                                // To mirror the sprite in x,y direction
     Sprite_State state;                       // Alive, dead, moving, etc.
-    char far *frames;                         // Pointer to the bitmap frames array, TODO: if this frames array becomes a global -> we don't need this one
+    char far *frames;                         // Pointer to the sprite sheet frame array, TODO: if this frame array becomes a global -> we don't need this one
     int current_frame;                        // The frame that should be rendered, -1 => should not render anything
     animation_ptr animations[MAX_ANIMATIONS]; // List of all animations the sprite has
     int current_animation;                    // NULL == no animation is playing

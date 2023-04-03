@@ -11,5 +11,6 @@
 #include "sprite.h"
 #include "frame.h"
 #include "assets.h"
+#include "file.h"
 
 #endif

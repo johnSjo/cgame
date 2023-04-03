@@ -1,7 +1,6 @@
 #include "assets.h"
 
 #define MAX_NUMBER_OF_ASSETS 32
-#define MAX_NUMBER_CONFIG_LINES 256
 
 // GLOBALS
 static asset_ptr assets_store[MAX_NUMBER_OF_ASSETS];
@@ -12,24 +11,24 @@ int Init_Assets_Store()
   int i;
   char far *lines[MAX_NUMBER_CONFIG_LINES];
   char far *line;
-  bitmap_config config;
-  bitmap_asset_ptr asset;
+  sprite_sheet_config config;
+  sprite_sheet_asset_ptr asset;
   pcx_image image;
 
   // Clear the assets store
   for (i = 0; i < MAX_NUMBER_OF_ASSETS; i++)
     assets_store[i] = NULL;
 
-  // Bitmaps
+  // Sprite Sheets
   _fmemset(lines, NULL, sizeof(lines));
 
-  if (Read_Config_File("assets/configs/bitmaps.cfg", lines))
+  if (Read_Config_File("assets/configs/spt_sheet.cfg", lines))
     return 1;
 
   i = 0;
   while (lines[i])
   {
-    if (Get_Bitmap_Config(&config, lines[i]))
+    if (Get_Sprite_Sheet_Config(&config, lines[i]))
       return 1;
 
     if (PCX_Load(config.path, &image))
@@ -39,9 +38,9 @@ int Init_Assets_Store()
     if (i == 0)
       PCX_Enable_Palette(&image);
 
-    asset = _fmalloc(sizeof(bitmap_asset));
+    asset = _fmalloc(sizeof(sprite_sheet_asset));
 
-    if (Create_Bitmap_Asset(&image, asset, &config))
+    if (Create_Sprite_Sheet_Asset(&image, asset, &config))
       return 1;
 
     if (Add_Asset_To_Store((asset_ptr)asset))
@@ -77,7 +76,7 @@ static int Add_Asset_To_Store(asset_ptr asset)
   return 0;
 }
 
-static int Create_Bitmap_Asset(pcx_image_ptr image, bitmap_asset_ptr asset, bitmap_config_ptr config)
+static int Create_Sprite_Sheet_Asset(pcx_image_ptr image, sprite_sheet_asset_ptr asset, sprite_sheet_config_ptr config)
 {
   int x, y;
   uchar frame_width = config->dimension.x;
@@ -87,14 +86,10 @@ static int Create_Bitmap_Asset(pcx_image_ptr image, bitmap_asset_ptr asset, bitm
   uchar number_of_frames = horizontal_frames * vertical_frames;
   uchar far *buffer = NULL;
   vec2 offset;
-  frame_ptr bitmap_frame;
+  sprite_sheet_frame_ptr frame;
 
-  asset->id = _fmalloc(sizeof(config->id));
-  asset->variant = BITMAP;
-  asset->number_of_frames = number_of_frames;
-  asset->frames = (frame_ptr far **)_fmalloc(sizeof(frame_ptr far *) * number_of_frames);
-
-  _fstrcpy(asset->id, config->id);
+  if (Init_Sprite_Sheet_Asset(asset, config, number_of_frames))
+    return 1;
 
   for (y = 0; y < vertical_frames; y++)
   {
@@ -105,20 +100,41 @@ static int Create_Bitmap_Asset(pcx_image_ptr image, bitmap_asset_ptr asset, bitm
       if (PCX_Create_Section(&buffer, image, offset, config->dimension))
         return 1;
 
-      bitmap_frame = _fmalloc(sizeof(frame));
-      bitmap_frame->buffer = buffer;
-      bitmap_frame->transparent = 0; // TODO: For now
-      bitmap_frame->dimension.x = frame_width;
-      bitmap_frame->dimension.y = frame_height;
+      frame = _fmalloc(sizeof(frame));
+      frame->buffer = buffer;
+      frame->transparent = 0; // TODO: For now
+      frame->dimension.x = frame_width;
+      frame->dimension.y = frame_height;
 
-      asset->frames[y * horizontal_frames + x] = (frame_ptr far *)bitmap_frame;
+      asset->frames[y * horizontal_frames + x] = (sprite_sheet_frame_ptr far *)frame;
     }
   }
 
   return 0;
 }
 
-static int Get_Bitmap_Config(bitmap_config_ptr config, char far *line)
+static int Init_Sprite_Sheet_Asset(sprite_sheet_asset_ptr asset, sprite_sheet_config_ptr config, uchar number_of_frames)
+{
+  if (!(asset->id = _fmalloc(sizeof(config->id))))
+  {
+    printf("\nError, initialize sprite sheet asset, failed to allocate 'id'.");
+    return 1;
+  }
+
+  asset->variant = SPRITE_SHEET;
+  asset->number_of_frames = number_of_frames;
+  if (!(asset->frames = (frame_ptr far **)_fmalloc(sizeof(frame_ptr far *) * number_of_frames)))
+  {
+    printf("\nError, initialize sprite sheet asset, failed to allocate 'frames'.");
+    return 1;
+  }
+
+  _fstrcpy(asset->id, config->id);
+
+  return 0;
+}
+
+static int Get_Sprite_Sheet_Config(sprite_sheet_config_ptr config, char far *line)
 {
   int width;
   int height;
@@ -152,37 +168,6 @@ asset_ptr Get_Asset(char *id)
   return NULL;
 }
 
-static int Read_Config_File(char *file_path, char **lines)
-{
-  int i;
-  char line[256];
-  char far *string;
-  int line_count = 0;
-  FILE *file_ptr = fopen(file_path, "r");
-
-  if (file_ptr == NULL)
-  {
-    printf("Error opening file.\n");
-    return 1;
-  }
-
-  while (fgets(line, sizeof(line), file_ptr))
-    line_count++;
-
-  fseek(file_ptr, 0, SEEK_SET);
-
-  for (i = 0; i < line_count; i++)
-  {
-    string = _fmalloc(sizeof(line));
-    fgets(string, sizeof(line), file_ptr);
-    lines[i] = string;
-  }
-
-  fclose(file_ptr);
-
-  return 0;
-}
-
 void Free_Assets_Store(void)
 {
   int i;
@@ -195,8 +180,8 @@ void Free_Assets_Store(void)
 
     switch (asset->variant)
     {
-    case BITMAP:
-      Free_Bitmap_Asset((bitmap_asset_ptr)asset);
+    case SPRITE_SHEET:
+      Free_Sprite_Sheet_Asset((sprite_sheet_asset_ptr)asset);
       break;
 
       // TODO: add functions for the other asset variants
@@ -206,12 +191,15 @@ void Free_Assets_Store(void)
   }
 }
 
-static void Free_Bitmap_Asset(bitmap_asset_ptr asset)
+static void Free_Sprite_Sheet_Asset(sprite_sheet_asset_ptr asset)
 {
   int i;
 
   for (i = 0; i < asset->number_of_frames; i++)
-    Free_Frame((frame_ptr)asset->frames[i]);
+  {
+    _ffree(asset->frames[i]->buffer);
+    _ffree(asset->frames[i]);
+  }
 
   _ffree(asset->id);
   _ffree(asset->frames);
