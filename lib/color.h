@@ -9,6 +9,8 @@
 #define PALETTE_REGISTER_WR 0x3c8
 #define PALETTE_DATA 0x3c9
 
+#define PALETTE_SIZE 256
+
 // STRUCTS
 typedef struct RGB_color_typ
 {

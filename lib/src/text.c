@@ -45,7 +45,7 @@ void Print_String(
 {
     int i = 0;
 
-    while (string[i] != 0)
+    while (string[i] != NULL)
     {
         Print_Char(pos_x + (i << 3), pos_y, string[i], color, background_color);
         i++;

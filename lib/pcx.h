@@ -39,11 +39,13 @@ typedef struct pcx_image_type
 // PROTOTYPES
 
 int PCX_Load(char *filename, pcx_image_ptr image);
-void PCX_Allocate_Buffer(pcx_image_ptr image, uint width, uint height);
 void PCX_Enable_Palette(pcx_image_ptr image);
 // For displaying the whole image
 void PCX_Show_Buffer(pcx_image_ptr image);
 void PCX_Delete(pcx_image_ptr image);
-unsigned char far *PCX_Create_Section(pcx_image_ptr image, vec2 offset, vec2 size);
+int PCX_Create_Section(uchar far **buffer, pcx_image_ptr image, vec2 offset, vec2 size);
+
+// INTERNALS
+static void PCX_Allocate_Buffer(pcx_image_ptr image, uint width, uint height);
 
 #endif

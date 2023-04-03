@@ -9,5 +9,7 @@
 #include "color.h"
 #include "pcx.h"
 #include "sprite.h"
+#include "frame.h"
+#include "assets.h"
 
 #endif
