@@ -22,7 +22,7 @@ int Init_Assets_Store()
   // Sprite Sheets
   _fmemset(lines, NULL, sizeof(lines));
 
-  if (Read_Config_File("assets/configs/spt_sheet.cfg", lines))
+  if (Read_Config_File("assets/configs/sprsheet.cfg", lines))
     return 1;
 
   i = 0;
@@ -38,15 +38,11 @@ int Init_Assets_Store()
     if (i == 0)
       PCX_Enable_Palette(&image);
 
-    asset = _fmalloc(sizeof(sprite_sheet_asset));
-
-    if (Create_Sprite_Sheet_Asset(&image, asset, &config))
+    if (!(asset = Init_Sprite_Sheet_Asset(&image, &config)))
       return 1;
 
     if (Add_Asset_To_Store((asset_ptr)asset))
       return 1;
-
-    PCX_Delete(&image);
 
     i++;
   }
@@ -76,63 +72,57 @@ static int Add_Asset_To_Store(asset_ptr asset)
   return 0;
 }
 
-static int Create_Sprite_Sheet_Asset(pcx_image_ptr image, sprite_sheet_asset_ptr asset, sprite_sheet_config_ptr config)
+static sprite_sheet_asset_ptr Init_Sprite_Sheet_Asset(pcx_image_ptr image, sprite_sheet_config_ptr config)
 {
-  int x, y;
-  uchar frame_width = config->dimension.x;
-  uchar frame_height = config->dimension.y;
-  uchar horizontal_frames = (image->header.width + 1) / frame_width;
-  uchar vertical_frames = (image->header.height + 1) / frame_height;
-  uchar number_of_frames = horizontal_frames * vertical_frames;
-  uchar far *buffer = NULL;
-  vec2 offset;
-  sprite_sheet_frame_ptr frame;
+  sprite_sheet_asset_ptr asset;
+  int image_width = (image->header.width + 1);
+  int image_height = (image->header.height + 1);
 
-  if (Init_Sprite_Sheet_Asset(asset, config, number_of_frames))
-    return 1;
-
-  for (y = 0; y < vertical_frames; y++)
+  if (!(asset = _fmalloc(sizeof(sprite_sheet_asset))))
   {
-    for (x = 0; x < horizontal_frames; x++)
-    {
-      offset.x = x * frame_width;
-      offset.y = y * frame_height;
-      if (PCX_Create_Section(&buffer, image, offset, config->dimension))
-        return 1;
+    printf("\nError, initialize sprite sheet asset, failed to allocate asset.");
+    return NULL;
+  };
 
-      frame = _fmalloc(sizeof(frame));
-      frame->buffer = buffer;
-      frame->transparent = 0; // TODO: For now
-      frame->dimension.x = frame_width;
-      frame->dimension.y = frame_height;
-
-      asset->frames[y * horizontal_frames + x] = (sprite_sheet_frame_ptr far *)frame;
-    }
-  }
-
-  return 0;
-}
-
-static int Init_Sprite_Sheet_Asset(sprite_sheet_asset_ptr asset, sprite_sheet_config_ptr config, uchar number_of_frames)
-{
   if (!(asset->id = _fmalloc(sizeof(config->id))))
   {
     printf("\nError, initialize sprite sheet asset, failed to allocate 'id'.");
-    return 1;
+    return NULL;
   }
-
-  asset->variant = SPRITE_SHEET;
-  asset->number_of_frames = number_of_frames;
-  if (!(asset->frames = (frame_ptr far **)_fmalloc(sizeof(frame_ptr far *) * number_of_frames)))
-  {
-    printf("\nError, initialize sprite sheet asset, failed to allocate 'frames'.");
-    return 1;
-  }
-
   _fstrcpy(asset->id, config->id);
 
-  return 0;
+  asset->variant = SPRITE_SHEET;
+  asset->transparent = 0; // For now...
+  asset->dimension.x = image_width;
+  asset->dimension.y = image_height;
+  asset->buffer = image->buffer; // NOTE: this asset takes over the allocated image data
+  asset->frame_dimension = config->dimension;
+  asset->number_of_frames.x = image_width / config->dimension.x;
+  asset->number_of_frames.y = image_height / config->dimension.y;
+
+  return asset;
 }
+
+// static int Init_Sprite_Sheet_Asset(sprite_sheet_asset_ptr asset, sprite_sheet_config_ptr config, uchar number_of_frames)
+// {
+//   if (!(asset->id = _fmalloc(sizeof(config->id))))
+//   {
+//     printf("\nError, initialize sprite sheet asset, failed to allocate 'id'.");
+//     return 1;
+//   }
+
+//   asset->variant = SPRITE_SHEET;
+//   asset->number_of_frames = number_of_frames;
+//   if (!(asset->frames = (frame_ptr far **)_fmalloc(sizeof(frame_ptr far *) * number_of_frames)))
+//   {
+//     printf("\nError, initialize sprite sheet asset, failed to allocate 'frames'.");
+//     return 1;
+//   }
+
+//   _fstrcpy(asset->id, config->id);
+
+//   return 0;
+// }
 
 static int Get_Sprite_Sheet_Config(sprite_sheet_config_ptr config, char far *line)
 {
@@ -193,15 +183,7 @@ void Free_Assets_Store(void)
 
 static void Free_Sprite_Sheet_Asset(sprite_sheet_asset_ptr asset)
 {
-  int i;
-
-  for (i = 0; i < asset->number_of_frames; i++)
-  {
-    _ffree(asset->frames[i]->buffer);
-    _ffree(asset->frames[i]);
-  }
-
   _ffree(asset->id);
-  _ffree(asset->frames);
+  _ffree(asset->buffer);
   _ffree(asset);
 }

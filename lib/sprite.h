@@ -3,7 +3,6 @@
 
 #include "vec.h"
 #include "typedef.h"
-#include "frame.h"
 
 // NOTE: these probably need to be tweaked later
 #define MAX_SPRITE_FRAMES 255    // Maximum total number of frames a sprite can hold
