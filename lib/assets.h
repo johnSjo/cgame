@@ -14,51 +14,51 @@
 
 typedef enum Asset_Variant
 {
-  SPRITE_SHEET,
-  IMAGE,
-  PALETTE
+    SPRITE_SHEET,
+    IMAGE,
+    PALETTE
 } Asset_Variant;
 
 // STRUCTS
 
 typedef struct sprite_sheet_config_type
 {
-  char id[32];
-  char path[128]; // File path to image
-  vec2 dimension; // The size of each frame
+    char id[32];
+    char path[128]; // File path to image
+    vec2 dimension; // The size of each frame
 } sprite_sheet_config, *sprite_sheet_config_ptr;
 
 typedef struct sprite_sheet_asset_type
 {
-  char far *id;          // The name/id of the asset
-  Asset_Variant variant; // Asset_Variant.SPRITE_SHEET
-  char transparent;      // 0 = opaque, 1 = has some transparent pixels, TODO: maybe do this on a per frame level
-  vec2 dimension;        // The size of the sprite sheet
-  uchar far *buffer;     // The pointer to the image data
-  vec2 frame_dimension;  // The size of each frame
-  vec2 number_of_frames; // Number horizontal and vertical frames
+    char id[32];           // The name/id of the asset
+    Asset_Variant variant; // Asset_Variant.SPRITE_SHEET
+    char transparent;      // 0 = opaque, 1 = has some transparent pixels, TODO: maybe do this on a per frame level
+    uchar far *buffer;     // The pointer to the image data
+    vec2 sheet_dimension;  // The size of the sprite sheet
+    vec2 frame_dimension;  // The size of each frame
+    vec2 number_of_frames; // Number horizontal and vertical frames
 } sprite_sheet_asset, *sprite_sheet_asset_ptr;
 
 typedef struct image_asset_type
 {
-  char far *id;
-  Asset_Variant variant; // Asset_Variant.IMAGE
-  char transparent;      // 0 = opaque, 1 = has some transparent pixels
-  vec2 dimension;        // The size of the image
-  uchar far *buffer;     // The pointer to the image data
+    char id[32];
+    Asset_Variant variant; // Asset_Variant.IMAGE
+    char transparent;      // 0 = opaque, 1 = has some transparent pixels
+    uchar far *buffer;     // The pointer to the image data
+    vec2 dimension;        // The size of the image
 } image_asset, *image_asset_ptr;
 
 typedef struct palette_asset_type
 {
-  char far *id;
-  Asset_Variant variant;
-  RGB_color far *palette;
+    char id[32];
+    Asset_Variant variant;
+    RGB_color far *palette;
 } palette_asset, *palette_asset_ptr;
 
 typedef struct asset_type
 {
-  char far *id;
-  Asset_Variant variant;
+    char id[32];
+    Asset_Variant variant;
 } asset, *asset_ptr;
 
 // PROTOTYPES

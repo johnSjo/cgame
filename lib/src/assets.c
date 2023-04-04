@@ -84,45 +84,19 @@ static sprite_sheet_asset_ptr Init_Sprite_Sheet_Asset(pcx_image_ptr image, sprit
     return NULL;
   };
 
-  if (!(asset->id = _fmalloc(sizeof(config->id))))
-  {
-    printf("\nError, initialize sprite sheet asset, failed to allocate 'id'.");
-    return NULL;
-  }
   _fstrcpy(asset->id, config->id);
 
   asset->variant = SPRITE_SHEET;
-  asset->transparent = 0; // For now...
-  asset->dimension.x = image_width;
-  asset->dimension.y = image_height;
-  asset->buffer = image->buffer; // NOTE: this asset takes over the allocated image data
+  asset->transparent = 0;        // For now...
+  asset->buffer = image->buffer; // NOTE: this asset takes ownership of the allocated image data
+  asset->sheet_dimension.x = image_width;
+  asset->sheet_dimension.y = image_height;
   asset->frame_dimension = config->dimension;
   asset->number_of_frames.x = image_width / config->dimension.x;
   asset->number_of_frames.y = image_height / config->dimension.y;
 
   return asset;
 }
-
-// static int Init_Sprite_Sheet_Asset(sprite_sheet_asset_ptr asset, sprite_sheet_config_ptr config, uchar number_of_frames)
-// {
-//   if (!(asset->id = _fmalloc(sizeof(config->id))))
-//   {
-//     printf("\nError, initialize sprite sheet asset, failed to allocate 'id'.");
-//     return 1;
-//   }
-
-//   asset->variant = SPRITE_SHEET;
-//   asset->number_of_frames = number_of_frames;
-//   if (!(asset->frames = (frame_ptr far **)_fmalloc(sizeof(frame_ptr far *) * number_of_frames)))
-//   {
-//     printf("\nError, initialize sprite sheet asset, failed to allocate 'frames'.");
-//     return 1;
-//   }
-
-//   _fstrcpy(asset->id, config->id);
-
-//   return 0;
-// }
 
 static int Get_Sprite_Sheet_Config(sprite_sheet_config_ptr config, char far *line)
 {
@@ -146,7 +120,7 @@ asset_ptr Get_Asset(char *id)
   int i = 0;
   asset_ptr asset_ptr;
 
-  while (i < MAX_NUMBER_OF_ASSETS)
+  while (i < MAX_NUMBER_OF_ASSETS && assets_store[i])
   {
     asset_ptr = assets_store[i];
     if (_fstrcmp(asset_ptr->id, id) == 0)
@@ -183,7 +157,6 @@ void Free_Assets_Store(void)
 
 static void Free_Sprite_Sheet_Asset(sprite_sheet_asset_ptr asset)
 {
-  _ffree(asset->id);
   _ffree(asset->buffer);
   _ffree(asset);
 }
