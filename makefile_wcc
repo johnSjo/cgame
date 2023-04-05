@@ -1,0 +1,18 @@
+obj = .\bin\cgame.obj
+bin = .\bin\cgame.exe
+
+CC = wcc
+CFLAG = -ml
+LINK = wlink
+LDFLAGS =
+
+$(bin): $(obj)
+	$(LINK) name $@ file { $(obj) }
+	.\bin\cgame.exe
+
+$(obj)
+	$(CC) $(CFLAG) -fo=$@ .\src\cgame.c
+
+clean: .symbolic
+	del *.obj
+	del $(bin)
