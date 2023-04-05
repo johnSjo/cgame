@@ -59,7 +59,7 @@ clean_exe:
 
 #		*Explicit Rules*
 .\bin\cgame.exe: cgame.cfg $(EXE_dependencies)
-  $(TLINK) /v/x/c/P-/L$(LIBPATH) @&&|
+  $(TLINK) /3/v/x/c/P-/L$(LIBPATH) @&&|
 c0c.obj+
 .\bin\\cgame.obj
 .\bin\cgame
@@ -79,7 +79,7 @@ clean_lib:
 	del /q .\lib\bin\*.*
 
 lib: vmode.obj text.obj color.obj pcx.obj sprite.obj \
-assets.obj file.obj
+assets.obj file.obj polygon.obj
 	tlib lib\bin\gfxlib +-lib\bin\vmode.obj
 	tlib lib\bin\gfxlib +-lib\bin\text.obj
 	tlib lib\bin\gfxlib +-lib\bin\color.obj
@@ -87,6 +87,7 @@ assets.obj file.obj
 	tlib lib\bin\gfxlib +-lib\bin\sprite.obj
 	tlib lib\bin\gfxlib +-lib\bin\assets.obj
 	tlib lib\bin\gfxlib +-lib\bin\file.obj
+	tlib lib\bin\gfxlib +-lib\bin\polygon.obj
 	tlib lib\bin\gfxlib *, lib\log
 
 vmode.obj: lib\gfxlib.cfg lib\src\vmode.c
@@ -109,6 +110,9 @@ assets.obj: lib\gfxlib.cfg lib\src\assets.c
 
 file.obj: lib\gfxlib.cfg lib\src\file.c
 	bcc +lib\gfxlib.cfg $(FLAG) lib\src\file.c
+
+polygon.obj: lib\gfxlib.cfg lib\src\polygon.c
+	bcc +lib\gfxlib.cfg $(FLAG) lib\src\polygon.c
 
 
 run:
