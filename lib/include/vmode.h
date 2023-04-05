@@ -2,8 +2,9 @@
 #define VMODE_H
 
 #include <stdio.h>
-#include <DOS.H>
-#include <CONIO.H>
+#include <dos.h>
+#include <conio.h>
+#include <string.h>
 #include "typedef.h"
 
 #define SET_MODE 0x00
@@ -18,5 +19,7 @@ extern uchar far *video_buffer;
 
 // PROTOTYPES
 void Set_Video_Mode(int mode);
+void Plot_Pixel_Fast(int x, int y, char color);
+void Fill_Screen(int color);
 
 #endif

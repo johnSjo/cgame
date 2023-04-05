@@ -22,4 +22,6 @@ obj/
 *.DSK
 *.lst
 *.LST
+*.OBJ
+*.LIB
 log

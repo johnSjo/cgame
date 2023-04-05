@@ -40,9 +40,7 @@ target:
 
 extra options:
 
-- `-DR` to run game after build
 - `-DP` to compile in production mode (TODO: change the compiler settings for prod)
-- `run` to just run the game (i.e. same as `./bin/cgame.exe`)
 
 Executable will be placed in `./bin`
 

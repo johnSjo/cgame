@@ -9,8 +9,7 @@
 // ENUMS
 typedef enum Entity_Type
 {
-  GROUP,
-  PLAYER,
+  NODE,
   SPRITE_FRAME,
   SPRITE_IMAGE,
   SPRITE_SCREEN,

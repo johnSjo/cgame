@@ -1,20 +1,15 @@
 .AUTODEPEND
 
-.PATH.obj = .\BIN
+.PATH.obj = .\bin
 
 #		*Translator Definitions*
 CC = bcc +CGAME.CFG
 TASM = TASM
 TLIB = tlib
 TLINK = tlink
-LIBPATH = C:\TOOLS\BORLANDC\LIB;.\LIB\bin
-INCLUDEPATH = C:\TOOLS\BORLANDC\INCLUDE;.\LIB
+LIBPATH = C:\TOOLS\BORLANDC\LIB;.\lib
 EXE = clean_exe .\bin\cgame.exe
 LIB = clean_lib lib
-
-!if $d(R)
-RUN = run
-!endif
 
 !if $d(G) || $d(L)
 LIB =
@@ -35,11 +30,7 @@ FLAG = -DPROD
 FLAG = -DDEV
 !endif
 
-all: start $(LIB) $(EXE) $(RUN)
-
-start:
-	mkdir bin
-	mkdir .\lib\bin
+all: $(LIB) $(EXE)
 
 #		*Implicit Rules*
 .c.obj:
@@ -61,7 +52,7 @@ clean_exe:
 .\bin\cgame.exe: cgame.cfg $(EXE_dependencies)
   $(TLINK) /3/v/x/c/P-/L$(LIBPATH) @&&|
 c0c.obj+
-.\bin\\cgame.obj
+.\bin\cgame.obj
 .\bin\cgame
 		# no map file
 gfxlib.lib+
@@ -76,19 +67,19 @@ cgame.obj: cgame.cfg src\cgame.c
 	$(CC) -c $(FLAG) src\cgame.c
 
 clean_lib:
-	del /q .\lib\bin\*.*
+	del /q .\lib\*.obj .\lib\*.lib
 
 lib: vmode.obj text.obj color.obj pcx.obj sprite.obj \
 assets.obj file.obj polygon.obj
-	tlib lib\bin\gfxlib +-lib\bin\vmode.obj
-	tlib lib\bin\gfxlib +-lib\bin\text.obj
-	tlib lib\bin\gfxlib +-lib\bin\color.obj
-	tlib lib\bin\gfxlib +-lib\bin\pcx.obj
-	tlib lib\bin\gfxlib +-lib\bin\sprite.obj
-	tlib lib\bin\gfxlib +-lib\bin\assets.obj
-	tlib lib\bin\gfxlib +-lib\bin\file.obj
-	tlib lib\bin\gfxlib +-lib\bin\polygon.obj
-	tlib lib\bin\gfxlib *, lib\log
+	tlib lib\gfxlib +-lib\vmode.obj
+	tlib lib\gfxlib +-lib\text.obj
+	tlib lib\gfxlib +-lib\color.obj
+	tlib lib\gfxlib +-lib\pcx.obj
+	tlib lib\gfxlib +-lib\sprite.obj
+	tlib lib\gfxlib +-lib\assets.obj
+	tlib lib\gfxlib +-lib\file.obj
+	tlib lib\gfxlib +-lib\polygon.obj
+	tlib lib\gfxlib *, lib\log
 
 vmode.obj: lib\gfxlib.cfg lib\src\vmode.c
 	bcc +lib\gfxlib.cfg $(FLAG) lib\src\vmode.c
@@ -113,9 +104,3 @@ file.obj: lib\gfxlib.cfg lib\src\file.c
 
 polygon.obj: lib\gfxlib.cfg lib\src\polygon.c
 	bcc +lib\gfxlib.cfg $(FLAG) lib\src\polygon.c
-
-
-run:
-	.\bin\cgame.exe
-
-.PRECIOUS:run
