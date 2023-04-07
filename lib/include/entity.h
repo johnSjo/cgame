@@ -13,6 +13,7 @@ typedef enum Entity_Type
   SPRITE_FRAME,
   SPRITE_IMAGE,
   SPRITE_SCREEN,
+  MESH,
 } Entity_Type;
 
 // STRUCTS
