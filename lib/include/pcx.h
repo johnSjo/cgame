@@ -7,7 +7,7 @@
 #include "typedef.h"
 #include "vmode.h"
 #include "color.h"
-#include "vec.h"
+#include "transfor.h"
 
 // STRUCTURES
 

@@ -8,7 +8,7 @@
 #include "typedef.h"
 #include "color.h"
 #include "pcx.h"
-#include "vec.h"
+#include "transfor.h"
 
 // ENUMS
 

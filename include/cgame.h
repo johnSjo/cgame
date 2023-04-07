@@ -18,7 +18,7 @@
 #include "color.h"
 #include "pcx.h"
 #include "sprite.h"
-#include "vec.h"
+#include "transfor.h"
 #include "polygon.h"
 #include "entity.h"
 
