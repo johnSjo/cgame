@@ -1,97 +1,51 @@
 #include "cgame.h"
 
-#define N_SPRITES 260
-
 // int main(int argc, char *argv[])
 int main(void)
 {
-    long i, j, boo;
-    vec2 anchor = {160, 100}, point = {160, 10};
-    vec2 point_old = point;
-    vec2 pixel;
-    double angle;
-    int sprite_index;
-    float n_points = 5;
-    int rotation = 0;
-    clock_t start_time, end_time;
-    float frame_time;
-    char far *video_address = (video_buffer + 3200);
+    int number_of_vertices = 4;
+    int number_of_indices = 6;
+    vertex_ptr *vertices = _fmalloc(sizeof(vertex) * number_of_vertices);
+    int far *indices = _fmalloc(sizeof(int) * number_of_indices);
+    mesh_ptr triangle;
+    transform world_position;
 
-    sprite_sheet_asset_ptr asset;
-    sprite_ptr sprite;
-    sprite_ptr sprites[N_SPRITES];
+    world_position.position.x = 0.0;
+    world_position.position.y = 0.0;
+
+    vertices[0]->position.x = -60.0;
+    vertices[0]->position.y = -70.0;
+    vertices[1]->position.x = 40.0;
+    vertices[1]->position.y = -20.0;
+    vertices[2]->position.x = -130.0;
+    vertices[2]->position.y = 30.0;
+    vertices[3]->position.x = -150.0;
+    vertices[3]->position.y = 0.0;
+    indices[0] = 0;
+    indices[1] = 1;
+    indices[2] = 2;
+    indices[3] = 0;
+    indices[4] = 3;
+    indices[5] = 2;
+
+    triangle = init_mesh("test triangle", vertices, number_of_vertices, indices, number_of_indices, 45);
+    triangle->transform.position.x = 160.0;
+    triangle->transform.position.y = 100.0;
+    triangle->has_transformed = 1;
+    triangle->color = 76;
 
     Set_Video_Mode(VGA256);
 
-    // for (i = 0; i <= n_points; i++)
-    // {
-    //     angle = ((i / n_points) * 360) * (M_PI / 180.0);
-    //     pixel = Rotate_Point(point, anchor, angle);
-    //     Render_Line(point_old, pixel, 45);
-    //     point_old = pixel;
-    //     // Plot_Pixel_Fast(pixel.x, pixel.y, 45);
-    //     // printf("\n%f | ", angle);
-    // }
-
-    // if (Init_Assets_Store())
-    // {
-    //     Set_Video_Mode(TEXT_MODE);
-    //     return 1;
-    // }
-
-    // asset = (sprite_sheet_asset_ptr)Get_Asset("tanks");
-
-    // for (i = 0; i < N_SPRITES; i++)
-    // {
-    //     sprites[i] = Init_Sprite("player", asset);
-    //     sprites[i]->position.x = (i % 20) * 16;
-    //     sprites[i]->position.y = (i / 20) * 16;
-    //     sprites[i]->current_frame = rand() % 32;
-    // }
-
+    render_mesh(triangle, &world_position, NULL);
 #ifdef PROD
     printf("\nNow we're in production");
 #endif
 
+    // Fill_Screen(240);
     while (!kbhit())
     {
-
-        // for (i = 0; i <= n_points; i++)
-        // {
-        //     angle = deg_to_rad((i / n_points) * 360 + rotation);
-        //     pixel = Rotate_Point(point, anchor, angle);
-        //     Render_Line(point_old, pixel, 45);
-        //     point_old = pixel;
-        //     // Plot_Pixel_Fast(pixel.x, pixel.y, 45);
-        //     // printf("\n%f | ", angle);
-        // }
-        // for (i = 0; i < N_SPRITES; i++)
-        // {
-        //     sprites[i]->current_frame = (sprites[i]->current_frame + 1) % 32;
-        //     Render_Sprite(sprites[i]);
-        // }
-
-        for (j = 0; j < 500; j++)
-        {
-            boo = j / 3.14;
-        }
-
-        _fmemset((video_buffer + 3200), 0, 60000);
-        // rotation = (rotation++) % 360;
-        // point.y = (sin(deg_to_rad(rotation)) * 25) + 50;
-
-        // Update game state and render the frame
-
-        end_time = clock();
-        frame_time = (float)(end_time - start_time) / CLOCKS_PER_SEC;
-        // printf("\033[%d;%dHTime: %ld | %ld", 2, 0, start_time, end_time);
-        start_time = clock();
-        printf("\033[%d;%dHHello, world! %u | %f", 0, 0, point.y, frame_time);
-        // printf("\033[%d;%dHTime: %f", 3, 0, CLOCKS_PER_SEC);
-        // printf("\033[%d;%dHTime: %u", 4, 0, rotation);
+        // wait_for_retrace();
     }
-
-    // Free_Assets_Store();
 
     Set_Video_Mode(TEXT_MODE);
 
