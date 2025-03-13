@@ -4,6 +4,7 @@ Playing around with stuff from an old book on c game programming
 
 Using:
 
+- C89
 - Dosbox-x
 - Borland C++ 3.1 (only for compiling and build the project)
 - vs code
